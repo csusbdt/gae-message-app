@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                 xmlns="http://java.sun.com/xml/ns/javaee" 
+                 xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+                 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+
+<!-- Filters --> 
+
+<filter> 
+  <filter-name>PageFilter</filter-name> 
+  <filter-class>cse405.message.PageFilter</filter-class> 
+</filter>
+
+<!-- Servlets --> 
+
+<servlet> 
+  <servlet-name>Home</servlet-name> 
+  <servlet-class>cse405.message.HomeServlet</servlet-class> 
+</servlet> 
+
+<servlet> 
+  <servlet-name>Logout</servlet-name> 
+  <servlet-class>cse405.message.LogoutServlet</servlet-class> 
+</servlet> 
+
+<!-- JSPs --> 
+
+<servlet> 
+  <servlet-name>home-jsp</servlet-name> 
+  <jsp-file>WEB-INF/jsp/home.jsp</jsp-file> 
+  <load-on-startup>1</load-on-startup> 
+</servlet> 
+
+<!-- Paths --> 
+
+<filter-mapping> 
+  <filter-name>PageFilter</filter-name> 
+  <url-pattern>/home</url-pattern> 
+</filter-mapping>
+
+<servlet-mapping> 
+  <servlet-name>Home</servlet-name> 
+  <url-pattern>/home</url-pattern> 
+</servlet-mapping>
+
+<servlet-mapping> 
+  <servlet-name>Logout</servlet-name> 
+  <url-pattern>/logout</url-pattern> 
+</servlet-mapping> 
+
+<!-- Welcome File --> 
+
+<welcome-file-list> 
+  <welcome-file>index.html</welcome-file> 
+</welcome-file-list> 
+
+</web-app>

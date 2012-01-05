@@ -12,6 +12,11 @@
   <filter-class>cse405.message.PageFilter</filter-class> 
 </filter>
 
+<filter> 
+  <filter-name>AjaxFilter</filter-name> 
+  <filter-class>cse405.message.AjaxFilter</filter-class> 
+</filter>
+
 <!-- Servlets --> 
 
 <servlet> 
@@ -24,6 +29,11 @@
   <servlet-class>cse405.message.LogoutServlet</servlet-class> 
 </servlet> 
 
+<servlet> 
+  <servlet-name>GetUsers</servlet-name> 
+  <servlet-class>cse405.message.GetUsersServlet</servlet-class> 
+</servlet> 
+
 <!-- JSPs --> 
 
 <servlet> 
@@ -32,12 +42,19 @@
   <load-on-startup>1</load-on-startup> 
 </servlet> 
 
-<!-- Paths --> 
+<!-- Filter Paths --> 
 
 <filter-mapping> 
   <filter-name>PageFilter</filter-name> 
   <url-pattern>/home</url-pattern> 
 </filter-mapping>
+
+<filter-mapping> 
+  <filter-name>AjaxFilter</filter-name> 
+  <url-pattern>/get-users</url-pattern> 
+</filter-mapping>
+
+<!-- Servlet Paths -->
 
 <servlet-mapping> 
   <servlet-name>Home</servlet-name> 
@@ -47,6 +64,11 @@
 <servlet-mapping> 
   <servlet-name>Logout</servlet-name> 
   <url-pattern>/logout</url-pattern> 
+</servlet-mapping> 
+
+<servlet-mapping> 
+  <servlet-name>GetUsers</servlet-name> 
+  <url-pattern>/get-users</url-pattern> 
 </servlet-mapping> 
 
 <!-- Welcome File --> 

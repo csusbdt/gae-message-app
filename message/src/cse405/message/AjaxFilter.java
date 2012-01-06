@@ -33,7 +33,7 @@ public class AjaxFilter implements Filter {
 		if (user == null) {
 			Ajax.sendNotAuthenticated(httpResp);
 		} else {
-			req.setAttribute("userId", user.getUserId());
+			req.setAttribute("user", user);
 			chain.doFilter(req, resp);
 		}
 	}

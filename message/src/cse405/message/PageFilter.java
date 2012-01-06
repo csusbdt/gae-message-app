@@ -35,6 +35,8 @@ public class PageFilter implements Filter {
 		if (user == null) {
 			httpResp.sendRedirect(userService.createLoginURL(httpReq.getServletPath()));
 		} else {
+			AppUser appUser = AppUser.findOrCreate(user);
+			req.setAttribute("appUser", appUser);
 			chain.doFilter(req, resp);
 		}
 	}

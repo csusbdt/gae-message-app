@@ -8,9 +8,15 @@
 $(document).ready(function() {
   $.ajax({
     url: '/get-users',
+    dataType: 'json',
     type: 'POST',
     success: function(data) {
-      $('#links').html(data);
+      alert(data);
+      var i = 0;
+      for (; i < data.length; ++i) {
+        alert(data[i]);
+        $('#links').append("<li>" + data[i] + "</li>");
+      }
     },
     error: function(xhr, textStatus, errorThrown) {
       alert(errorThrown);
@@ -25,7 +31,7 @@ $(document).ready(function() {
   <div>${errorMessage}</div>
 </c:if>
 
-<div id="links"></div>
+<ul id="links"></ul>
 
 <div>
 <a href="/logout">Logout</a>

@@ -1,7 +1,11 @@
 package cse405.message;
 
-import java.security.SecureRandom;
+import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
+
 import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.google.appengine.api.datastore.DatastoreFailureException;
 import com.google.appengine.api.datastore.DatastoreService;
@@ -10,37 +14,17 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.users.User;
 
 public class AppUser {
-	private static SecureRandom random = new SecureRandom();
-
 	private static final String entityKind = "AppUser";
-	private static final String csrfTokenFieldName = "csrfToken";
+	private static final String nicknameFieldName = "nickname";
 	private static final String messageFieldName = "message";
 	private static final String initialMessageFieldValue = "Hello, World.";
 
 	private Entity appUserEntity;
 	private boolean dirty = false;
 	
-	static {
-		// Create the user collection object if it doesn't exist.
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		Key appUserKey = KeyFactory.createKey(AppUser.entityKind, userId);
-		Query query = new Query(AppUser.entityKind, appUserKey);
-		appUser.appUserEntity = datastore.prepare(query).asSingleEntity();
-		if (appUser.appUserEntity == null) {
-			appUser.appUserEntity = new Entity(AppUser.entityKind, appUserKey);
-			appUser.appUserEntity.setProperty(AppUser.messageFieldName,
-					initialMessageFieldValue);
-			appUser.createCsrfToken();
-		} else if (!appUser.appUserEntity.hasProperty(csrfTokenFieldName)) {
-			appUser.createCsrfToken();
-		}
-		return appUser;
-		
-	}
-
 	public boolean isDirty() {
 		return dirty;
 	}
@@ -48,34 +32,35 @@ public class AppUser {
 	private AppUser() {
 	}
 
-	// This method will set the dirty flag when it creates a new AppUser and
-	// when it creates a missing csrf token. If you expect cases, then you
-	// should call save().
-//	public static AppUser getAuthenticatedAppUser() {
-//		UserService userService = UserServiceFactory.getUserService();
-//		User user = userService.getCurrentUser();
-//		if (user == null) {
-//			return null;
-//		}
-//		return AppUser.findOrCreate(user.getUserId());
-//	}
-
-	public static AppUser findOrCreate(String userId) {
+	public static AppUser findOrCreate(User user) {
 		AppUser appUser = new AppUser();
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-		Key appUserKey = KeyFactory.createKey(AppUser.entityKind, userId);
+		Key appUserKey = KeyFactory.createKey(AppUser.entityKind, user.getUserId());
 		Query query = new Query(AppUser.entityKind, appUserKey);
 		appUser.appUserEntity = datastore.prepare(query).asSingleEntity();
 		if (appUser.appUserEntity == null) {
 			appUser.appUserEntity = new Entity(AppUser.entityKind, appUserKey);
+			appUser.appUserEntity.setProperty(AppUser.nicknameFieldName,
+					user.getNickname());
 			appUser.appUserEntity.setProperty(AppUser.messageFieldName,
 					initialMessageFieldValue);
-			appUser.createCsrfToken();
-		} else if (!appUser.appUserEntity.hasProperty(csrfTokenFieldName)) {
-			appUser.createCsrfToken();
+			appUser.dirty = true;
 		}
 		return appUser;
+	}
+	
+	public static List<String> getUserIdList() {
+		LinkedList<String> userIdList = new LinkedList<String>();
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Query query = new Query(AppUser.entityKind);
+		Iterator<Entity> appUserIter = datastore.prepare(query).asIterator(withLimit(100));
+		while (appUserIter.hasNext()) {
+			Entity entity = appUserIter.next();
+			userIdList.add(entity.getAppId());
+		}		
+		return userIdList;
 	}
 
 	public void save() throws ConcurrentModificationException,
@@ -86,21 +71,6 @@ public class AppUser {
 			datastore.put(appUserEntity);
 			dirty = false;
 		}
-	}
-
-	public void removeCsrfToken() {
-		appUserEntity.removeProperty(csrfTokenFieldName);
-		dirty = true;
-	}
-
-	private void createCsrfToken() {
-		String csrfToken = "" + random.nextLong();
-		appUserEntity.setProperty(AppUser.csrfTokenFieldName, csrfToken);
-		dirty = true;
-	}
-
-	public String getCsrfToken() {
-		return (String) appUserEntity.getProperty(csrfTokenFieldName);
 	}
 
 	public String getMessage() {

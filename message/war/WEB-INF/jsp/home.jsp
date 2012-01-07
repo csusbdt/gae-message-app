@@ -7,15 +7,14 @@
 <script>
 $(document).ready(function() {
   $.ajax({
-    url: '/get-users',
+    url: '/get-message-list',
     dataType: 'json',
     type: 'POST',
     success: function(data) {
       alert(data);
       var i = 0;
       for (; i < data.length; ++i) {
-        alert(data[i]);
-        $('#links').append("<li>" + data[i] + "</li>");
+        $('#messages').append("<li>" + data[i].nickname + "</li>");
       }
     },
     error: function(xhr, textStatus, errorThrown) {
@@ -27,11 +26,11 @@ $(document).ready(function() {
 
 <title>GAE Message App</title>
 
-<c:if test="!emptyMessage error">
-  <div>${errorMessage}</div>
+<c:if test="!empty user">
+  <div>${user.email}</div>
 </c:if>
 
-<ul id="links"></ul>
+<ul id="messages"></ul>
 
 <div>
 <a href="/logout">Logout</a>

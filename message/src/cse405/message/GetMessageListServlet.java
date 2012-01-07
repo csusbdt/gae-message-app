@@ -11,26 +11,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("serial")
-public class GetUsersServlet extends HttpServlet {
+public class GetMessageListServlet extends HttpServlet {
+
+	private void writeMessage(PrintWriter writer, Message message) {
+		writer.print("{ '");
+		writer.print(message.getNickname());
+		writer.print("', '");
+		writer.print(message.getText());
+		writer.print("' }");
+	}
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		resp.setContentType("text/json");
 		PrintWriter writer = resp.getWriter();
+
+		List<Message> messageList = Message.getAll();
+		Iterator<Message> messageIter = messageList.iterator();
+
 		writer.println("[");
-		List<String> userIdList = AppUser.getUserIdList();
-		Iterator<String> userIdIter = userIdList.iterator();
-		if (userIdIter.hasNext())
-		{
-			writer.print("\"");			
-			writer.print(userIdIter.next());			
-			writer.print("\"");			
+
+		if (messageIter.hasNext()) {
+			writeMessage(writer, messageIter.next());
 		}
-		while (userIdIter.hasNext())
-		{
-			writer.print(", \"");			
-			writer.print(userIdIter.next());			
-			writer.print("\"");			
+		while (messageIter.hasNext()) {
+			writer.print(", ");
+			writeMessage(writer, messageIter.next());
 		}
 		writer.println("]");
 	}

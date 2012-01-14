@@ -17,5 +17,6 @@ public class DeleteMessageServlet extends HttpServlet {
 		User user = (User) req.getAttribute("user");
 		Message message = Message.getByUserId(user.getUserId());
 		message.delete();
+		GetMessageListServlet.sendMessageList(req, resp);
 	}
 }

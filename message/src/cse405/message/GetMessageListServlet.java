@@ -13,21 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 public class GetMessageListServlet extends HttpServlet {
 
-	private void writeMessage(PrintWriter writer, Message message) {
+	private static void writeMessage(PrintWriter writer, Message message) {
 		writer.print("{ \"nickname\": \"");
 		writer.print(message.getNickname());
-		writer.print("\", \"id\": \"");
-		writer.print(message.getID());
+		writer.print("\", \"text\": \"");
+		writer.print(message.getText());
 		writer.print("\" }");
 	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		resp.setContentType("text/json");
-		PrintWriter writer = resp.getWriter();
-
-		List<Message> messageList = Message.getAll();
+	
+	private static void writeMessageList(PrintWriter writer, List<Message> messageList) {
 		Iterator<Message> messageIter = messageList.iterator();
 
 		writer.println("[");
@@ -39,6 +33,20 @@ public class GetMessageListServlet extends HttpServlet {
 			writer.print(", ");
 			writeMessage(writer, messageIter.next());
 		}
-		writer.println("]");
+		writer.println("]");		
+	}
+	
+	public static void sendMessageList(HttpServletRequest req, HttpServletResponse resp) 
+	throws IOException {
+		resp.setContentType("text/json");
+		PrintWriter writer = resp.getWriter();
+		List<Message> messageList = Message.getAll();
+		writeMessageList(writer, messageList);		
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		sendMessageList(req, resp);
 	}
 }

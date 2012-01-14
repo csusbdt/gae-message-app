@@ -1,7 +1,6 @@
 package cse405.message;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,13 +20,7 @@ public class CreateMessageServlet extends HttpServlet {
 			return;
 		}
 		User user = (User) req.getAttribute("user");
-		Message message = Message.createOrUpdate(user.getUserId(), user.getNickname(), text);
-		resp.setContentType("text/json");
-		PrintWriter writer = resp.getWriter();
-		writer.print("{ 'id': '");
-		writer.print(message.getID());
-		writer.print("', 'nickname': '");
-		writer.print(message.getNickname());
-		writer.print("' }");
+		Message.createOrUpdate(user.getUserId(), user.getNickname(), text);	
+		GetMessageListServlet.sendMessageList(req, resp);
 	}
 }

@@ -30,13 +30,13 @@
 </servlet>
 
 <servlet> 
-  <servlet-name>GetMessage</servlet-name> 
-  <servlet-class>cse405.message.GetMessageServlet</servlet-class> 
+  <servlet-name>CreateMessage</servlet-name> 
+  <servlet-class>cse405.message.CreateMessageServlet</servlet-class> 
 </servlet>
 
 <servlet> 
-  <servlet-name>SetMessage</servlet-name> 
-  <servlet-class>cse405.message.SetMessageServlet</servlet-class> 
+  <servlet-name>DeleteMessage</servlet-name> 
+  <servlet-class>cse405.message.DeleteMessageServlet</servlet-class> 
 </servlet>
 
 <servlet> 
@@ -61,7 +61,9 @@
 
 <filter-mapping> 
   <filter-name>AjaxFilter</filter-name> 
-  <url-pattern>/get-users</url-pattern> 
+  <url-pattern>/get-message-list</url-pattern> 
+  <url-pattern>/create-message</url-pattern> 
+  <url-pattern>/delete-message</url-pattern> 
 </filter-mapping>
 
 <!-- Servlet Paths -->
@@ -77,14 +79,14 @@
 </servlet-mapping> 
 
 <servlet-mapping> 
-  <servlet-name>GetMessage</servlet-name> 
-  <url-pattern>/get-message</url-pattern> 
+  <servlet-name>CreateMessage</servlet-name> 
+  <url-pattern>/create-message</url-pattern> 
 </servlet-mapping> 
 
-<servlet-mapping> 
-  <servlet-name>SetMessage</servlet-name> 
-  <url-pattern>/set-message</url-pattern> 
-</servlet-mapping> 
+<servlet-mapping>
+  <servlet-name>DeleteMessage</servlet-name>
+  <url-pattern>/delete-message</url-pattern>
+</servlet-mapping>
 
 <servlet-mapping> 
   <servlet-name>GetMessageList</servlet-name> 

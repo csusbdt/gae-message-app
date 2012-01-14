@@ -14,11 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 public class GetMessageListServlet extends HttpServlet {
 
 	private void writeMessage(PrintWriter writer, Message message) {
-		writer.print("{ '");
+		writer.print("{ \"nickname\": \"");
 		writer.print(message.getNickname());
-		writer.print("', '");
-		writer.print(message.getText());
-		writer.print("' }");
+		writer.print("\", \"id\": \"");
+		writer.print(message.getID());
+		writer.print("\" }");
 	}
 
 	@Override

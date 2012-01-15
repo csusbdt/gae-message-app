@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +17,9 @@ public class GetMessageListServlet extends HttpServlet {
 		writer.print("{ \"nickname\": \"");
 		writer.print(message.getNickname());
 		writer.print("\", \"text\": \"");
-		writer.print(message.getText().replaceAll("\"", "\\\\\""));
+		String text = message.getText().replaceAll("\"", "\\\\\""); // Escape quotes.
+		text = text.replaceAll("<", "&lt;"); // Remove HTML tags.
+		writer.print(text);
 		writer.print("\" }");
 	}
 	

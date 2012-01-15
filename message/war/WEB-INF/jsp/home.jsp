@@ -88,6 +88,7 @@ $(document).ready(function() {
     dataType: 'json',
     type: 'POST',
     success: function(data) {
+console.log(data);
       setMessageList(data);
       view.listMessages();
     },

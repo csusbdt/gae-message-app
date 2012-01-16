@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -35,6 +36,9 @@ public class PageFilter implements Filter {
 		if (user == null) {
 			httpResp.sendRedirect(userService.createLoginURL(httpReq.getServletPath()));
 		} else {
+			HttpSession session = httpReq.getSession();
+			String csrfToken = Ajax.generateCsrfToken();
+			session.setAttribute("csrfToken", csrfToken);
 			req.setAttribute("user", user);
 			chain.doFilter(req, resp);
 		}

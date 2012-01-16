@@ -1,32 +1,30 @@
 package cse405.message;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class Ajax {
-	private static final String CSRF_TOKEN_HEADER = "X-CSRF-Token";
 	
 	private static final String NOT_AUTHENTICATED = "NOT_AUTHENTICATED";
-	private static final String BAD_TOKEN = "BAD_TOKEN";
+	private static final String BAD_CSRF_TOKEN = "BAD_CSRF_TOKEN";
 	private static final String ILLEGAL_REQUEST = "ILLEGAL_REQUEST";
 	private static final String CONCURRENT_MODIFICATION_EXCEPTION = "CONCURRENT MODIFICATION EXCEPTION";
-	private static final String DATASTORE_FAILURE_EXCEPTION = "DATASTORE_FAILURE_EXCEPTION";
-
-	public static String getCsrfToken(HttpServletRequest req)
+	private static final String DATASTORE_FAILURE_EXCEPTION = "DATASTORE_FAILURE_EXCEPTION";	
+	private static final String CSRF_TOKEN_HEADER = "X-CSRF-Token";
+	
+	private static SecureRandom secureRandom = new SecureRandom();
+	
+	public static void sendBadToken(HttpServletResponse resp)
 			throws IOException {
-		return req.getHeader(CSRF_TOKEN_HEADER);
+		resp.sendError(300, BAD_CSRF_TOKEN);
 	}
 
 	public static void sendNotAuthenticated(HttpServletResponse resp)
 			throws IOException {
 		resp.sendError(300, NOT_AUTHENTICATED);
-	}
-
-	public static void sendBadToken(HttpServletResponse resp)
-			throws IOException {
-		resp.sendError(300, BAD_TOKEN);
 	}
 
 	public static void sendIllegalRequest(HttpServletResponse resp)
@@ -43,10 +41,13 @@ public class Ajax {
 			throws IOException {
 		resp.sendError(300, DATASTORE_FAILURE_EXCEPTION);
 	}
-
-	public static void sendHtml(HttpServletResponse resp, String html)
+	
+	public static String generateCsrfToken() {
+		return "" + secureRandom.nextLong();
+	}
+	
+	public static String getCsrfToken(HttpServletRequest req)
 			throws IOException {
-		resp.setContentType("text/html");
-		resp.getWriter().println(html);
+		return req.getHeader(CSRF_TOKEN_HEADER);
 	}
 }

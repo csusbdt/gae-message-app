@@ -1,5 +1,6 @@
 package cse405.message;
 
+import java.security.SecureRandom;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,7 +29,11 @@ public class Message {
 	private static final String nicknamePropertyName = "nickname";
 	private static final String textPropertyName = "text";
 	
+	private static final String csrfTokenPropertyName = "csrfToken";
+	
 	private static Key parentKey = null;
+	
+	private static SecureRandom secureRandom = new SecureRandom();
 	
 	// Check if message parent exists; if not, then create it.
 	static {
@@ -68,6 +73,14 @@ public class Message {
 		entity.setProperty(textPropertyName, text);
 	}
 	
+//	public void setCsrfToken(String csrfToken) {
+//		entity.setProperty(csrfTokenPropertyName, csrfToken);
+//	}
+	
+	public String getCsrfToken() {
+		return (String) entity.getProperty(csrfTokenPropertyName);
+	}
+	
 	private void save() {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		datastore.put(entity);		
@@ -88,6 +101,7 @@ public class Message {
 			entity.setProperty(userIdPropertyName, userId);
 			entity.setProperty(nicknamePropertyName, nickname);
 			entity.setProperty(textPropertyName, text);
+			entity.setProperty(csrfTokenPropertyName, "" + secureRandom.nextLong());
 			message = new Message(entity);
 		}
 		message.save();

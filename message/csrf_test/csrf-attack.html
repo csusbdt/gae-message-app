@@ -1,0 +1,18 @@
+<title>GAE Message App</title>
+
+<h1>GAE Message App Test</h1>
+
+<p>
+The following form sends a delete-message request to the message application
+running on localhost.
+The delete should fail because the CSRF token is not sent.
+</p>
+
+<p>
+To run the test, open this file in a browser in which you are logged into the
+message app.  Then click the button to win $100.
+</p>
+
+<form action="http://localhost:8888/delete-message" method="post">
+  <input type="submit" value="Click here to win $100" />
+</form>

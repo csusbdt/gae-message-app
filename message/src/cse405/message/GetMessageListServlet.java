@@ -19,6 +19,8 @@ public class GetMessageListServlet extends HttpServlet {
 		writer.print("\", \"text\": \"");
 		String text = message.getText().replaceAll("\"", "\\\\\""); // Escape quotes.
 		text = text.replaceAll("<", "&lt;"); // Remove HTML tags.
+		text = text.replaceAll("&lt;a", "<a"); // Re-insert a tags.
+		text = text.replaceAll("&lt;/a", "</a"); // Re-insert a tags.
 		writer.print(text);
 		writer.print("\" }");
 	}

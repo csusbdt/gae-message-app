@@ -5,6 +5,8 @@
 <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
 
 <script>
+var csrfToken = '${csrfToken}';
+
 var view = {
   userMessageExists: ${userMessageExists},
   
@@ -20,82 +22,99 @@ var view = {
     $('#create-message-body').hide();
     $('#list-messages-body').show();
     if (this.userMessageExists) {
-      $('#button1').html('Delete Message').off('click').on('click', deleteMessage);
+      $('#button1').html('Delete Message').off('click').on('click', controller.deleteMessage);
     } else {
       $('#button1').html('Create Message').off('click').on('click', view.createMessage);
     }
-    $('#button2').html('Logout').off('click').on('click', logout);
+    $('#button2').html('Logout').off('click').on('click', controller.logout);
     $('#button3').off('click').hide();
   },
 
   createMessage: function() {
     $('#list-messages-body').hide();
     $('#create-message-body').show();
-    $('#button1').html('Save').off('click').on('click', createMessage);
+    $('#button1').html('Save').off('click').on('click', controller.createMessage);
     $('#button2').html('Cancel').off('click').on('click', view.listMessages);
-    $('#button3').html('Logout').off('click').on('click', logout);
+    $('#button3').html('Logout').off('click').on('click', controller.logout);
   }
 }
 
-function logout() {
-  window.location.replace('/logout');
-}
+var controller = {
 
-function setMessageList(messageList) {
-  $('#messages').empty();
-  for (var i = 0; i < messageList.length; ++i) {
-    $('#messages').append('<li><h2>' + messageList[i].nickname + '</h2><p>' + messageList[i].text + '</p></li>');
-  }
-}
+  init: function() {
+    $.ajaxSetup({
+      beforeSend: function(jqXHR, settings) {
+        jqXHR.setRequestHeader('X-CSRF-Token', csrfToken);
+      }
+    });
+    $.ajax({
+      url: '/get-message-list',
+      dataType: 'json',
+      type: 'POST',
+      success: function(data) {
+        controller.setMessageList(data);
+        view.listMessages();
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        alert(errorThrown);
+      }
+    });
+  },
 
-function createMessage() {
-  view.userMessageExists = true;
-  $.ajax({
-    url: '/create-message',
-    dataType: 'json',
-    type: 'POST',
-    data: { 'text': $('#text').val() },
-    success: function(data) {
-      setMessageList(data);
-      view.listMessages();
-    },
-    error: function(xhr, textStatus, errorThrown) {
-      alert(errorThrown);
+  logout: function() {
+    window.location.replace('/logout');
+  },
+
+  setMessageList: function(messageList) {
+    $('#messages').empty();
+    for (var i = 0; i < messageList.length; ++i) {
+      $('#messages').append(
+        '<li><h2>' + 
+        messageList[i].nickname + 
+        '</h2><p>' + 
+        messageList[i].text + 
+        '</p></li>'
+      );
     }
-  });
-}
+  },
 
-function deleteMessage() {
-  view.userMessageExists = false;
-  $.ajax({
-    url: '/delete-message',
-    dataType: 'json',
-    type: 'POST',
-    success: function(data) {
-      setMessageList(data);
-      view.listMessages();         
-    },
-    error: function(xhr, textStatus, errorThrown) {
-      alert(errorThrown);
-    }
-  });
+  createMessage: function() {
+    view.userMessageExists = true;
+    $.ajax({
+      url: '/create-message',
+      dataType: 'json',
+      type: 'POST',
+      data: { 'text': $('#text').val() },
+      success: function(data) {
+        controller.setMessageList(data);
+        view.listMessages();
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        alert(errorThrown);
+      }
+    });
+  },
+
+  deleteMessage: function() {
+    view.userMessageExists = false;
+    $.ajax({
+      url: '/delete-message',
+      dataType: 'json',
+      type: 'POST',
+      success: function(data) {
+        controller.setMessageList(data);
+        view.listMessages();         
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        alert(errorThrown);
+      }
+    });
+  } 
 }
 
 $(document).ready(function() {
   view.init();
-  $.ajax({
-    url: '/get-message-list',
-    dataType: 'json',
-    type: 'POST',
-    success: function(data) {
-console.log(data);
-      setMessageList(data);
-      view.listMessages();
-    },
-    error: function(xhr, textStatus, errorThrown) {
-      alert(errorThrown);
-    }
-  });
+  controller.init();
 });
 </script>
 
@@ -112,5 +131,5 @@ console.log(data);
 </div>
 
 <div id="create-message-body">
- <textarea id="text" rows="3" cols="20">Hello there.</textarea>
+ <textarea id="text" rows="5" cols="80"></textarea>
 </div>

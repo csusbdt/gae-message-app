@@ -1,7 +1,6 @@
 package cse405.message;
 
 import java.io.IOException;
-import java.security.SecureRandom;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,9 +13,7 @@ public class Ajax {
 	private static final String CONCURRENT_MODIFICATION_EXCEPTION = "CONCURRENT MODIFICATION EXCEPTION";
 	private static final String DATASTORE_FAILURE_EXCEPTION = "DATASTORE_FAILURE_EXCEPTION";	
 	private static final String CSRF_TOKEN_HEADER = "X-CSRF-Token";
-	
-	private static SecureRandom secureRandom = new SecureRandom();
-	
+		
 	public static void sendBadToken(HttpServletResponse resp)
 			throws IOException {
 		resp.sendError(300, BAD_CSRF_TOKEN);
@@ -42,9 +39,14 @@ public class Ajax {
 		resp.sendError(300, DATASTORE_FAILURE_EXCEPTION);
 	}
 	
-	public static String generateCsrfToken() {
-		return "" + secureRandom.nextLong();
-	}
+//	public static String generateCsrfToken(String userId) {
+//		String plaintext = userId + "" + secureRandom.nextLong();
+//		return null;
+//	}
+//	
+//	public static String generateCsrfToken() {
+//		return "" + secureRandom.nextLong();
+//	}
 	
 	public static String getCsrfToken(HttpServletRequest req)
 			throws IOException {

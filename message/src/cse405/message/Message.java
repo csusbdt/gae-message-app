@@ -12,6 +12,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Text;
 
 // The application design is that authenticated users have zero or one messages.
 //
@@ -58,7 +59,7 @@ public class Message {
 	}
 	
 	public String getText() {
-		return (String) entity.getProperty(textPropertyName);
+		return ((Text) entity.getProperty(textPropertyName)).getValue();
 	}
 	
 	public String getNickname() {
@@ -70,7 +71,7 @@ public class Message {
 	}
 	
 	private void setText(String text) {
-		entity.setProperty(textPropertyName, text);
+		entity.setProperty(textPropertyName, new Text(text));
 	}
 	
 	public String getCsrfToken() {
@@ -96,7 +97,7 @@ public class Message {
 			Entity entity = new Entity(entityKind, parentKey);
 			entity.setProperty(userIdPropertyName, userId);
 			entity.setProperty(nicknamePropertyName, nickname);
-			entity.setProperty(textPropertyName, text);
+			entity.setProperty(textPropertyName, new Text(text));
 			entity.setProperty(csrfTokenPropertyName, "" + secureRandom.nextLong());
 			message = new Message(entity);
 		}

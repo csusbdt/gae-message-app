@@ -15,7 +15,7 @@ public class GetMessageListServlet extends HttpServlet {
 
 	private static void writeMessage(PrintWriter writer, Message message) {
 		String text = message.getText()
-			.replaceAll("\"", "\\\\\"")
+			.replaceAll("\\\\", "\\\\\\\\")
 			.replaceAll("\"", "\\\\\"")
 			.replaceAll("/", "\\\\/")
 			.replaceAll("\b", "\\\\b")

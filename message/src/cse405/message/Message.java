@@ -73,10 +73,6 @@ public class Message {
 		entity.setProperty(textPropertyName, text);
 	}
 	
-//	public void setCsrfToken(String csrfToken) {
-//		entity.setProperty(csrfTokenPropertyName, csrfToken);
-//	}
-	
 	public String getCsrfToken() {
 		return (String) entity.getProperty(csrfTokenPropertyName);
 	}

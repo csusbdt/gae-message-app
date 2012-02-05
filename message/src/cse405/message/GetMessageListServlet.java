@@ -14,13 +14,18 @@ import javax.servlet.http.HttpServletResponse;
 public class GetMessageListServlet extends HttpServlet {
 
 	private static void writeMessage(PrintWriter writer, Message message) {
+		String text = message.getText()
+			.replaceAll("\"", "\\\\\"")
+			.replaceAll("\"", "\\\\\"")
+			.replaceAll("/", "\\\\/")
+			.replaceAll("\b", "\\\\b")
+			.replaceAll("\f", "\\\\f")
+			.replaceAll("\n", "\\\\n")
+			.replaceAll("\r", "\\\\r")
+			.replaceAll("\t", "\\\\t");		
 		writer.print("{ \"nickname\": \"");
 		writer.print(message.getNickname());
-		writer.print("\", \"text\": \"");
-		String text = message.getText().replaceAll("\"", "\\\\\""); // Escape quotes.
-		text = text.replaceAll("<", "&lt;"); // Remove HTML tags.
-		text = text.replaceAll("&lt;a", "<a"); // Re-insert a tags.
-		text = text.replaceAll("&lt;/a", "</a"); // Re-insert a tags.
+		writer.print("\", \"text\": \"");		
 		writer.print(text);
 		writer.print("\" }");
 	}

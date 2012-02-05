@@ -20,6 +20,19 @@ public class CreateMessageServlet extends HttpServlet {
 			return;
 		}
 		User user = (User) req.getAttribute("user");
+		
+		text = text
+			.replaceAll("<", "&lt;")
+			.replaceAll("&lt;a ", "<a ")
+			.replaceAll("&lt;/a>", "</a>")
+			.replaceAll("&lt;br>", "<br>")
+			.replaceAll("&lt;i>", "<i>")
+			.replaceAll("&lt;/i>", "</i>")
+			.replaceAll("&lt;b>", "<b>")
+			.replaceAll("&lt;/b>", "</b>")
+			.replaceAll("&lt;s>", "<s>")
+			.replaceAll("&lt;/s>", "</s>");
+
 		Message.createOrUpdate(user.getUserId(), user.getNickname(), text);	
 		GetMessageListServlet.sendMessageList(req, resp);
 	}

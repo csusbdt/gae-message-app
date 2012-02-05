@@ -37,7 +37,7 @@ public class PageFilter implements Filter {
 		} else {
 			String csrfToken = CsrfCipher.encryptUserId(user.getUserId());
 			httpReq.setAttribute("csrfToken", csrfToken);
-			req.setAttribute("user", user);
+			httpReq.setAttribute("user", user);
 			chain.doFilter(req, resp);
 		}
 	}

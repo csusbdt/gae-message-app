@@ -39,15 +39,6 @@ public class Ajax {
 		resp.sendError(300, DATASTORE_FAILURE_EXCEPTION);
 	}
 	
-//	public static String generateCsrfToken(String userId) {
-//		String plaintext = userId + "" + secureRandom.nextLong();
-//		return null;
-//	}
-//	
-//	public static String generateCsrfToken() {
-//		return "" + secureRandom.nextLong();
-//	}
-	
 	public static String getCsrfToken(HttpServletRequest req)
 			throws IOException {
 		return req.getHeader(CSRF_TOKEN_HEADER);
